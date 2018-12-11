@@ -15,7 +15,7 @@ class MyPasswordModel {
   }
 }
 
-class MyPasswordUIValidation: PasswordUIValidation<MyPasswordModel> {
+class MyPasswordUIValidation: PasswordUIValidation {
   init(in stackView: UIStackView) {
     super.init(in: stackView, digit: 4)
     validation = { password in

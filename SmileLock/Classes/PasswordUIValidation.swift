@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class PasswordUIValidation<T>: PasswordInputCompleteProtocol {
+open class PasswordUIValidation: PasswordInputCompleteProtocol {
   public typealias Failure    = (UInt) -> Void
   public typealias Success    = (String) -> Void
   public typealias Validation = (String) -> Bool
