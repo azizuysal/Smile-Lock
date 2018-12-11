@@ -87,7 +87,7 @@ open class PasswordDotView: UIView {
         let maxShakeCount = 5
         let centerX = bounds.midX
         let centerY = bounds.midY
-        var duration = 0.10
+        var duration = 0.07
         var moveX: CGFloat = 5
         
         if shakeCount == 0 || shakeCount == maxShakeCount {
@@ -123,7 +123,7 @@ open class PasswordDotView: UIView {
 private extension PasswordDotView {
     //MARK: Animation
     func shakeAnimation(withDuration duration: TimeInterval, animations: @escaping () -> (), completion: @escaping () -> ()) {
-        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.01, initialSpringVelocity: 0.35, options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.01, initialSpringVelocity: 0.35, options: UIView.AnimationOptions(), animations: {
             animations()
         }) { _ in
             completion()

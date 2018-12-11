@@ -10,27 +10,25 @@ import UIKit
 import SmileLock
 
 class MyPasswordModel {
-    class func match(_ password: String) -> MyPasswordModel? {
-        guard password == "123456" else { return nil }
-        return MyPasswordModel()
-    }
+  class func match(_ password: String) -> Bool {
+    return password == "1234"
+  }
 }
 
 class MyPasswordUIValidation: PasswordUIValidation<MyPasswordModel> {
-    init(in stackView: UIStackView) {
-        super.init(in: stackView, digit: 6)
-        validation = { password in
-            MyPasswordModel.match(password)
-        }
+  init(in stackView: UIStackView) {
+    super.init(in: stackView, digit: 4)
+    validation = { password in
+      MyPasswordModel.match(password)
     }
-    
-    //handle Touch ID
-    override func touchAuthenticationComplete(_ passwordContainerView: PasswordContainerView, success: Bool, error: Error?) {
-        if success {
-            let dummyModel = MyPasswordModel()
-            self.success?(dummyModel)
-        } else {
-            passwordContainerView.clearInput()
-        }
+  }
+  
+  //handle Touch ID
+  override func touchAuthenticationComplete(_ passwordContainerView: PasswordContainerView, success: Bool, error: Error?) {
+    if success {
+      self.success?("")
+    } else {
+      passwordContainerView.clearInput()
     }
+  }
 }
