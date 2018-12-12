@@ -29,7 +29,11 @@ open class PasswordContainerView: UIView {
     }
     
     open weak var delegate: PasswordInputCompleteProtocol?
-    fileprivate var touchIDContext = LAContext()
+    fileprivate var touchIDContext: LAContext {
+      let context = LAContext()
+      context.localizedFallbackTitle = touchFallbackTitle
+      return context
+    }
     
     fileprivate var inputString: String = "" {
         didSet {
@@ -85,6 +89,7 @@ open class PasswordContainerView: UIView {
     }
     
     open var touchAuthenticationReason = "Touch to unlock"
+    open var touchFallbackTitle: String?
     
     //MARK: AutoLayout
     open var width: CGFloat = 0 {
@@ -191,8 +196,6 @@ open class PasswordContainerView: UIView {
             DispatchQueue.main.async {
                 if success {
                     self.passwordDotView.inputDotCount = self.passwordDotView.totalDotCount
-                    // instantiate LAContext again for avoiding the situation that PasswordContainerView stay in memory when authenticate successfully
-                    self.touchIDContext = LAContext()
                 }
                 
                 // delay delegate callback for the user can see passwordDotView input dots filled animation
