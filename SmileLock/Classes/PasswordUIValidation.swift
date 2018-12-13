@@ -20,6 +20,7 @@ open class PasswordUIValidation: PasswordInputCompleteProtocol {
   open var view: PasswordContainerView!
   
   private var tries: UInt = 0
+  private let notificationFeedback = UINotificationFeedbackGenerator()
   
   public init(in stackView: UIStackView, width: CGFloat? = nil, digit: Int) {
     view = PasswordContainerView.create(in: stackView, digit: digit)
@@ -37,10 +38,12 @@ open class PasswordUIValidation: PasswordInputCompleteProtocol {
   open func passwordInputComplete(_ passwordContainerView: PasswordContainerView, input: String) {
     if let validation = validation, validation(input) {
       success?(input)
+      notificationFeedback.notificationOccurred(.success)
     } else {
       passwordContainerView.wrongPassword()
       tries += 1
       failure?(tries)
+      notificationFeedback.notificationOccurred(.error)
     }
   }
   

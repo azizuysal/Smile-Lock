@@ -26,6 +26,8 @@ open class PasswordInputView: UIView {
     fileprivate var touchUpFlag = true
     fileprivate(set) open var isAnimating = false
     var isVibrancyEffect = false
+  
+    private let selectionFeedback = UISelectionFeedbackGenerator()
     
     @IBInspectable
     open var numberString = "2" {
@@ -79,6 +81,7 @@ open class PasswordInputView: UIView {
         
         //now touch down, so set touch up flag --> false
         touchUpFlag = false
+        selectionFeedback.selectionChanged()
         touchDownAnimation()
     }
     
