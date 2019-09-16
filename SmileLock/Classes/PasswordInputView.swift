@@ -13,10 +13,10 @@ public protocol PasswordInputViewTappedProtocol: class {
 
 @IBDesignable
 open class PasswordInputView: UIView {
-    
+
     //MARK: Property
     open weak var delegate: PasswordInputViewTappedProtocol?
-    
+
     let circleView = UIView()
     let button = UIButton()
     open var label = UILabel()
@@ -26,49 +26,50 @@ open class PasswordInputView: UIView {
     fileprivate var touchUpFlag = true
     fileprivate(set) open var isAnimating = false
     var isVibrancyEffect = false
-  
+
     private let selectionFeedback = UISelectionFeedbackGenerator()
-    
+
     @IBInspectable
     open var numberString = "2" {
         didSet {
             label.text = numberString
         }
     }
-    
+
     @IBInspectable
     open var borderColor = UIColor.darkGray {
         didSet {
             backgroundColor = borderColor
         }
     }
-    
+
     @IBInspectable
     open var circleBackgroundColor = UIColor.white {
         didSet {
             circleView.backgroundColor = circleBackgroundColor
         }
     }
-    
+
     @IBInspectable
     open var textColor = UIColor.darkGray {
         didSet {
             label.textColor = textColor
         }
     }
-    
+
     @IBInspectable
     open var highlightBackgroundColor = UIColor.red
-    
+
     @IBInspectable
     open var highlightTextColor = UIColor.white
-    
+
     //MARK: Life Cycle
     #if TARGET_INTERFACE_BUILDER
     override open func willMove(toSuperview newSuperview: UIView?) {
         configureSubviews()
     }
     #else
+
     override open func awakeFromNib() {
         super.awakeFromNib()
         configureSubviews()
@@ -78,40 +79,40 @@ open class PasswordInputView: UIView {
     @objc func touchDown() {
         //delegate callback
         delegate?.passwordInputView(self, tappedString: numberString)
-        
+
         //now touch down, so set touch up flag --> false
         touchUpFlag = false
         selectionFeedback.selectionChanged()
         touchDownAnimation()
     }
-    
+
     @objc func touchUp() {
         //now touch up, so set touch up flag --> true
         touchUpFlag = true
-        
+
         //only show touch up animation when touch down animation finished
         if !isAnimating {
             touchUpAnimation()
         }
     }
-    
+
     open override func layoutSubviews() {
         super.layoutSubviews()
         updateUI()
     }
-    
+
     fileprivate func getLabelFont() -> UIFont {
         if labelFont != nil {
             return labelFont!
         }
-        
+
         let width = bounds.width
         let height = bounds.height
         let radius = min(width, height) / 2
         return UIFont.systemFont(ofSize: radius * fontSizeRatio,
                                  weight: touchUpFlag ? UIFont.Weight.thin : UIFont.Weight.regular)
     }
-    
+
     fileprivate func updateUI() {
         //prepare calculate
         let width = bounds.width
@@ -120,14 +121,14 @@ open class PasswordInputView: UIView {
         let radius = min(width, height) / 2
         let borderWidth = radius * borderWidthRatio
         let circleRadius = radius - borderWidth
-        
+
         //update label
         label.text = numberString
-        
+
         label.font = getLabelFont()
-        
+
         label.textColor = textColor
-        
+
         //update circle view
         circleView.frame = CGRect(x: 0, y: 0, width: 2 * circleRadius, height: 2 * circleRadius)
         circleView.center = center
@@ -135,13 +136,13 @@ open class PasswordInputView: UIView {
         circleView.backgroundColor = circleBackgroundColor
         //circle view border
         circleView.layer.borderWidth = isVibrancyEffect ? borderWidth : 0
-        
+
         //update mask
         let path = UIBezierPath(arcCenter: center, radius: radius, startAngle: 0, endAngle: 2.0 * CGFloat(Double.pi), clockwise: false)
         let maskLayer = CAShapeLayer()
         maskLayer.path = path.cgPath
         layer.mask = maskLayer
-        
+
         //update color
         backgroundColor = borderColor
     }
@@ -156,7 +157,7 @@ private extension PasswordInputView {
         NSLayoutConstraint.addEqualConstraintsFromSubView(label, toSuperView: self)
         label.textAlignment = .center
         label.isAccessibilityElement = false
-        
+
         //configure button
         NSLayoutConstraint.addEqualConstraintsFromSubView(button, toSuperView: self)
         button.isExclusiveTouch = true
@@ -164,7 +165,7 @@ private extension PasswordInputView {
         button.addTarget(self, action: #selector(PasswordInputView.touchUp), for: [.touchUpInside, .touchDragOutside, .touchCancel, .touchDragExit])
         button.accessibilityValue = numberString
     }
-    
+
     //MARK: Animation
     func touchDownAction() {
         label.font = getLabelFont()
@@ -174,17 +175,17 @@ private extension PasswordInputView {
         }
         circleView.backgroundColor = highlightBackgroundColor
     }
-    
+
     func touchUpAction() {
         label.font = getLabelFont()
         label.textColor = textColor
         backgroundColor = borderColor
         circleView.backgroundColor = circleBackgroundColor
     }
-    
+
     func touchDownAnimation() {
         isAnimating = true
-        tappedAnimation(animations: { 
+        tappedAnimation(animations: {
             self.touchDownAction()
         }) {
             if self.touchUpFlag {
@@ -194,16 +195,16 @@ private extension PasswordInputView {
             }
         }
     }
-    
+
     func touchUpAnimation() {
         isAnimating = true
-        tappedAnimation(animations: { 
+        tappedAnimation(animations: {
             self.touchUpAction()
         }) {
             self.isAnimating = false
         }
     }
-    
+
     func tappedAnimation(animations: @escaping () -> (), completion: (() -> ())?) {
         UIView.animate(withDuration: 0.25, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState], animations: animations) { _ in
             completion?()
@@ -220,13 +221,13 @@ internal extension NSLayoutConstraint {
         let rightConstraint = baseView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: insets.right)
         NSLayoutConstraint.activate([topConstraint, bottomConstraint, leftConstraint, rightConstraint])
     }
-    
+
     class func addEqualConstraintsFromSubView(_ subView: UIView, toSuperView superView: UIView) {
         superView.addSubview(subView)
         subView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.addConstraints(fromView: subView, toView: superView, constraintInsets: UIEdgeInsets.zero)
     }
-    
+
     class func addConstraints(fromSubview subview: UIView, toSuperView superView: UIView, constraintInsets insets: UIEdgeInsets) {
         superView.addSubview(subview)
         subview.translatesAutoresizingMaskIntoConstraints = false

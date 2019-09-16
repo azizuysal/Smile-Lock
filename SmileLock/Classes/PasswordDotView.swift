@@ -9,7 +9,7 @@ import UIKit
 
 @IBDesignable
 open class PasswordDotView: UIView {
-    
+
     //MARK: Property
     @IBInspectable
     open var inputDotCount = 0 {
@@ -19,21 +19,21 @@ open class PasswordDotView: UIView {
             setNeedsDisplay()
         }
     }
-    
+
     @IBInspectable
     open var totalDotCount = 6 {
         didSet {
             setNeedsDisplay()
         }
     }
-    
+
     @IBInspectable
     open var strokeColor = UIColor.darkGray {
         didSet {
             setNeedsDisplay()
         }
     }
-    
+
     @IBInspectable
     open var fillColor = UIColor.red {
         didSet {
@@ -44,9 +44,9 @@ open class PasswordDotView: UIView {
     fileprivate var radius: CGFloat = 6
     fileprivate let spacingRatio: CGFloat = 2
     fileprivate let borderWidthRatio: CGFloat = 1 / 5
-    
+
     fileprivate(set) open var isFull = false
-    
+
     //MARK: Draw
     open override func draw(_ rect: CGRect) {
         super.draw(rect)
@@ -66,7 +66,7 @@ open class PasswordDotView: UIView {
             }
         }
     }
-    
+
     //MARK: LifeCycle
     open override func awakeFromNib() {
         super.awakeFromNib()
@@ -79,7 +79,7 @@ open class PasswordDotView: UIView {
         updateRadius()
         setNeedsDisplay()
     }
-    
+
     //MARK: Animation
     fileprivate var shakeCount = 0
     fileprivate var direction = false
@@ -89,7 +89,7 @@ open class PasswordDotView: UIView {
         let centerY = bounds.midY
         var duration = 0.07
         var moveX: CGFloat = 5
-        
+
         if shakeCount == 0 || shakeCount == maxShakeCount {
             duration *= 0.5
         } else {
@@ -123,13 +123,13 @@ open class PasswordDotView: UIView {
 private extension PasswordDotView {
     //MARK: Animation
     func shakeAnimation(withDuration duration: TimeInterval, animations: @escaping () -> (), completion: @escaping () -> ()) {
-        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.01, initialSpringVelocity: 0.35, options: [], animations: {
+        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.01, initialSpringVelocity: 0.35, options: .curveEaseInOut, animations: {
             animations()
         }) { _ in
             completion()
         }
     }
-    
+
     //MARK: Update Radius
     func updateRadius() {
         let width = bounds.width
